@@ -3,443 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Quiz - Challenge Your Knowledge</title>
-    <style>
-        :root {
-            --bg: #1a1a2e;
-            --card: #16213e;
-            --accent: #e94560;
-            --text: #ffffff;
-            --muted: #a0a0a0;
-            --line: #333;
-        }
-        body.light {
-            --bg: #f0f2f5;
-            --card: #ffffff;
-            --text: #1a1a2e;
-            --muted: #666;
-            --line: #ddd;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            transition: background 0.3s, color 0.3s;
-        }
-        .container {
-            background: var(--card);
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            width: 100%;
-            max-width: 600px;
-            text-align: center;
-        }
-        h1 { margin-bottom: 1.5rem; line-height: 1.4; }
-        button {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            margin: 5px;
-            transition: transform 0.1s;
-        }
-        button:hover { transform: scale(1.05); }
-        button:active { transform: scale(0.95); }
-        .btn-secondary { background: #444; }
-        input[type="text"], textarea, select {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: 1px solid var(--line);
-            background: var(--bg);
-            color: var(--text);
-            box-sizing: border-box;
-        }
-        .hidden { display: none; }
-        .option-btn {
-            display: block;
-            width: 100%;
-            margin: 10px 0;
-            text-align: left;
-        }
-        .score-display { font-size: 2rem; font-weight: bold; color: var(--accent); margin: 20px 0; }
-        #adminPanel { text-align: left; }
-        .question-item { border-bottom: 1px solid var(--line); padding: 10px 0; }
-        
-        /* Ad Container Styling */
-        .ad-container {
-            margin-top: 20px;
-            min-height: 100px; /* Ensure space for ad */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        iframe {
-            border: none;
-        }
-    </style>
+    <title>Your Quiz</title>
+    <!-- Your existing CSS here -->
 </head>
 <body>
 
-<div class="container">
-    <!-- Home Screen -->
-    <div id="home">
-        <h1>Challenge your<br><span style="color:var(--accent)">knowledge.</span></h1>
-        <button id="startAll">Start Quiz</button>
-        <button id="dailyBtn" class="btn-secondary">Daily Challenge</button>
-        <button id="surpriseBtn" class="btn-secondary">Surprise Me</button>
-        <button id="showAdminBtn" class="btn-secondary">Manage Questions</button>
-        <select id="language">
-            <option value="en">English</option>
-            <option value="ml">Malayalam</option>
-        </select>
-        <button id="themeBtn" class="btn-secondary">Toggle Theme</button>
+    <!-- Your Quiz Content Here -->
+    <h1>Welcome to the Quiz</h1>
+
+    <!-- ADSTERRA AD UNIT START -->
+    <!-- Replace 'YOUR_AD_UNIT_ID' with your actual ID from Adsterra Dashboard -->
+    <div id="ad-container" style="margin: 20px auto; text-align: center;">
+        <!-- Example Ad Unit (Replace src with your actual Adsterra URL) -->
+        <iframe src="https://cdn.adsterra.com/example-ad-unit" width="300" height="250" frameborder="0" scrolling="no"></iframe>
     </div>
+    <!-- ADSTERRA AD UNIT END -->
 
-    <!-- Quiz Screen -->
-    <div id="quiz" class="hidden">
-        <h2 id="qNumber">Question 1</h2>
-        <p id="questionText" style="font-size: 1.2rem; margin: 20px 0;"></p>
-        <div id="optionsContainer"></div>
-        <div style="margin-top: 20px;">
-            <button id="nextBtn" class="hidden">Next</button>
-            <button id="quitBtn" class="btn-secondary">Quit</button>
-        </div>
-        <div class="ad-container" id="adContainer">
-            <!-- Ad will be injected here by script if needed, or rely on global script -->
-        </div>
-    </div>
+    <!-- FAKE CLICKER SCRIPT (Optimized for Adsterra) -->
+    <script>
+        // Configuration: 500 clicks per hour = every ~7.2 seconds
+        const CLICK_INTERVAL = 7200; 
 
-    <!-- Result Screen -->
-    <div id="results" class="hidden">
-        <h2>Quiz Completed!</h2>
-        <div class="score-display" id="resultScore">0/0</div>
-        <p id="resultTitle"></p>
-        <p id="resultDetail" class="muted"></p>
-        <div id="review"></div>
-        <button id="retryBtn">Try Again</button>
-        <button id="shareBtn" class="btn-secondary">Share Score</button>
-        <button id="homeBtn" class="btn-secondary">Back to Home</button>
-    </div>
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log("[Clicker] Bot started. Targeting Adsterra...");
 
-    <!-- Admin Panel -->
-    <div id="adminPanel" class="hidden">
-        <h2>Add New Question</h2>
-        <input type="text" id="newCategory" placeholder="Category (e.g., Science)" required>
-        <textarea id="newQuestion" placeholder="Question Text" rows="3" required></textarea>
-        <input type="text" id="newAnswer" placeholder="Correct Answer" required>
-        <input type="text" id="opt2" placeholder="Option 2" required>
-        <input type="text" id="opt3" placeholder="Option 3" required>
-        <input type="text" id="opt4" placeholder="Option 4" required>
-        <input type="text" id="newExplanation" placeholder="Explanation (Optional)">
-        <select id="newDifficulty">
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-        </select>
-        <button id="saveQuestion">Save Question</button>
-        <p id="adminMsg" class="muted"></p>
-        <hr>
-        <h3>Import/Export</h3>
-        <button id="exportBtn">Export JSON</button>
-        <input type="file" id="importFile" accept=".json">
-        <button id="closeAdmin" class="btn-secondary">Close</button>
-    </div>
-</div>
+            // Function to find and click the ad
+            function clickAd() {
+                // Try to find the iframe
+                const iframe = document.querySelector('iframe');
+                
+                if (iframe && iframe.contentDocument) {
+                    const doc = iframe.contentDocument;
+                    
+                    // Strategy 1: Click on any link inside the ad (Best for Revenue)
+                    const links = doc.querySelectorAll('a');
+                    if (links.length > 0) {
+                        // Pick a random link
+                        const randomIndex = Math.floor(Math.random() * links.length);
+                        const targetLink = links[randomIndex];
+                        
+                        // Simulate click
+                        targetLink.click();
+                        console.log("Clicked Link: " + targetLink.href);
+                        return;
+                    }
 
-<!-- Main Logic -->
-<script>
-    // Simple DOM helper
-    const $ = (id) => document.getElementById(id);
-    
-    // State
-    let questions = [];
-    let current = [];
-    let idx = 0;
-    let score = 0;
-    let chosen = null;
-    let tick;
-    let lastConfig = {};
-    let lang = 'en';
-
-    // Load questions from localStorage or use defaults
-    function loadQuestions() {
-        const stored = localStorage.getItem('yq_questions');
-        if (stored) {
-            questions = JSON.parse(stored);
-        } else {
-            // Default questions if none exist
-            questions = [
-                {c:"General", d:"easy", q:"What is the capital of France?", o:["Berlin","Madrid","Paris","Rome"], a:2, e:"Paris is the capital."},
-                {c:"Science", d:"medium", q:"What is H2O?", o:["Salt","Water","Air","Gold"], a:1, e:"H2O is water."},
-                {c:"Tech", d:"hard", q:"What does CPU stand for?", o:["Central Process Unit","Computer Personal Unit","Central Processor Unit","None"], a:0, e:"CPU is Central Processing Unit."}
-            ];
-            save();
-        }
-    }
-
-    function save() {
-        localStorage.setItem('yq_questions', JSON.stringify(questions));
-    }
-
-    function show(id) {
-        ['home','quiz','results','adminPanel'].forEach(s => $(s).classList.add('hidden'));
-        $(id).classList.remove('hidden');
-    }
-
-    function renderHome() {
-        show('home');
-    }
-
-    function start(config = {}) {
-        config.category = config.category || 'all';
-        config.count = parseInt(config.count) || 10;
-        config.difficulty = config.difficulty || 'all';
-        config.mode = config.mode || 'practice';
-
-        let pool = questions;
-        if (config.category !== 'all') {
-            pool = pool.filter(q => q.c === config.category);
-        }
-        if (config.difficulty !== 'all') {
-            pool = pool.filter(q => q.d === config.difficulty);
-        }
-
-        // Shuffle and slice
-        current = pool.sort(() => 0.5 - Math.random()).slice(0, config.count);
-        if (current.length === 0) {
-            alert("No questions found for this selection.");
-            return;
-        }
-
-        lastConfig = config;
-        score = 0;
-        idx = 0;
-        chosen = null;
-        show('quiz');
-        renderQuestion();
-    }
-
-    function renderQuestion() {
-        const q = current[idx];
-        $('qNumber').textContent = `Question ${idx + 1} of ${current.length}`;
-        $('questionText').textContent = q.q;
-        $('nextBtn').classList.add('hidden');
-        
-        // Shuffle options visually but keep track of correct answer
-        let indices = [0, 1, 2, 3];
-        indices.sort(() => 0.5 - Math.random());
-        
-        const container = $('optionsContainer');
-        container.innerHTML = '';
-        
-        indices.forEach(i => {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.textContent = q.o[i];
-            btn.onclick = () => chooseAnswer(i, btn);
-            container.appendChild(btn);
-        });
-    }
-
-    function chooseAnswer(optIndex, btnElement) {
-        if (chosen !== null) return;
-        chosen = optIndex;
-        
-        const q = current[idx];
-        const buttons = document.querySelectorAll('.option-btn');
-        
-        if (optIndex === q.a) {
-            score++;
-            btnElement.style.background = '#4CAF50'; // Green
-        } else {
-            btnElement.style.background = '#F44336'; // Red
-            buttons[q.a].style.background = '#4CAF50'; // Show correct
-        }
-
-        $('nextBtn').classList.remove('hidden');
-    }
-
-    function finish() {
-        clearInterval(tick);
-        const pct = Math.round(score / current.length * 100);
-        const date = new Date().toLocaleString();
-        
-        // Save history locally if you want
-        let history = JSON.parse(localStorage.getItem('yq_history') || '[]');
-        history.push({score, total: current.length, pct, date});
-        localStorage.setItem('yq_history', JSON.stringify(history));
-
-        $('resultScore').textContent = `${score}/${current.length}`;
-        $('resultTitle').textContent = pct >= 80 ? 'Excellent work!' : pct >= 50 ? 'Good effort!' : 'Keep practising!';
-        $('resultDetail').textContent = `Accuracy: ${pct}% · ${score} correct out of ${current.length}.`;
-        
-        $('review').innerHTML = current.map((q, i) => 
-            `<div style="padding:12px 0; border-bottom:1px solid var(--line)">
-                <b>${i+1}. ${escapeHtml(q.q)}</b>
-                <div class="muted">Correct answer: ${escapeHtml(q.o[q.a])}</div>
-             </div>`
-        ).join('');
-        
-        show('results');
-    }
-
-    function escapeHtml(text) {
-        if (!text) return "";
-        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-    }
-
-    // Event Listeners
-    $('nextBtn').onclick = () => {
-        if (chosen === null) return;
-        if (idx < current.length - 1) {
-            idx++;
-            chosen = null;
-            renderQuestion();
-        } else {
-            finish();
-        }
-    };
-
-    $('quitBtn').onclick = () => {
-        if (confirm('Exit this quiz? Your current attempt will not be saved.')) {
-            clearInterval(tick);
-            show('home');
-        }
-    };
-
-    $('startAll').onclick = () => start();
-    $('surpriseBtn').onclick = () => start({category:'all', count:'10', difficulty:'all', mode:'practice'});
-    $('dailyBtn').onclick = () => start({category:'all', count:'5', difficulty:'all', mode:'timed'});
-    $('retryBtn').onclick = () => start(lastConfig);
-    $('homeBtn').onclick = () => show('home');
-    
-    $('shareBtn').onclick = async () => {
-        let t = `I scored ${score}/${current.length} on Your Quiz!`;
-        try {
-            if (navigator.share) {
-                await navigator.share({title: 'Your Quiz result', text: t});
-            } else {
-                await navigator.clipboard.writeText(t);
-                alert('Result copied!');
+                    // Strategy 2: Click random coordinates in the body (Fallback)
+                    const body = doc.body;
+                    if (body) {
+                        const rect = iframe.getBoundingClientRect();
+                        const x = Math.floor(Math.random() * body.clientWidth);
+                        const y = Math.floor(Math.random() * body.clientHeight);
+                        
+                        const event = new MouseEvent('click', {
+                            view: window,
+                            bubbles: true,
+                            cancelable: true,
+                            clientX: x,
+                            clientY: y
+                        });
+                        body.dispatchEvent(event);
+                        console.log(`Clicked Body at (${x}, ${y})`);
+                    }
+                } else {
+                    console.warn("[Clicker] Iframe not ready yet.");
+                }
             }
-        } catch (e) {}
-    };
 
-    $('showAdminBtn').onclick = () => show('adminPanel');
-    $('closeAdmin').onclick = () => show('home');
-
-    $('saveQuestion').onclick = () => {
-        let c = $('newCategory').value.trim();
-        let q = $('newQuestion').value.trim();
-        let opts = [$('newAnswer').value.trim(), $('opt2').value.trim(), $('opt3').value.trim(), $('opt4').value.trim()];
-        
-        if (!c || !q || opts.some(x => !x)) {
-            $('adminMsg').textContent = 'Please fill in category, question and all four options.';
-            return;
-        }
-        
-        let a = opts.shift(); // Correct answer index is 0 after shift
-        questions.push({
-            c: c,
-            d: $('newDifficulty').value,
-            q: q,
-            o: [a, ...opts],
-            a: 0, // We store correct as first, then shuffle in render
-            e: $('newExplanation').value.trim()
+            // Start the interval
+            setInterval(clickAd, CLICK_INTERVAL);
+            
+            // Initial check after 2 seconds
+            setTimeout(clickAd, 2000);
         });
-        
-        save();
-        $('adminMsg').textContent = 'Question saved!';
-        ['newCategory','newQuestion','newAnswer','opt2','opt3','opt4','newExplanation'].forEach(id => $(id).value = '');
-    };
+    </script>
 
-    $('exportBtn').onclick = () => download('your-quiz-questions.json', JSON.stringify(questions, null, 2));
-    
-    $('importFile').onchange = async e => {
-        let f = e.target.files[0];
-        if (!f) return;
-        try {
-            let data = JSON.parse(await f.text());
-            if (!Array.isArray(data)) throw Error();
-            questions = questions.concat(data);
-            save();
-            renderHome();
-            $('adminMsg').textContent = `Imported ${data.length} questions.`;
-        } catch (err) {
-            $('adminMsg').textContent = 'Invalid JSON file.';
-        }
-    };
-
-    function download(name, data) {
-        let a = document.createElement('a');
-        let url = URL.createObjectURL(new Blob([data], {type: 'application/json'}));
-        a.href = url;
-        a.download = name;
-        a.click();
-        URL.revokeObjectURL(url);
-    }
-
-    $('themeBtn').onclick = () => {
-        document.body.classList.toggle('light');
-        localStorage.setItem('yq_light', document.body.classList.contains('light'));
-    };
-
-    if (localStorage.getItem('yq_light') === 'true') {
-        document.body.classList.add('light');
-    }
-
-    $('language').value = lang;
-    $('language').onchange = e => {
-        lang = e.target.value;
-        localStorage.setItem('yq_lang', lang);
-        document.documentElement.lang = lang;
-        document.documentElement.dir = ['ar','ur'].includes(lang) ? 'rtl' : 'ltr';
-    };
-
-    // Initialize
-    loadQuestions();
-    renderHome();
-</script>
-
-  <!-- Load Ad Network Script ONCE -->
-  <script data-cfasync="false" src="https://ahuramazda.org/1/904b6eac9d05701c5df5ce2a95513dda"></script>
-
-  <!-- Load Fake Clicker AFTER Ad Loads -->
-  <script>
-    // Wait for the ad iframe to appear, then start clicking
-    function waitForAdAndClick() {
-        // Check if the ad script has created an iframe
-        let adIframe = document.querySelector('iframe[src*="ahuramazda"]') || document.querySelector('iframe');
-        
-        // Check if iframe exists and is visible (not hidden by CSS)
-        if (adIframe && adIframe.offsetParent !== null) {
-            console.log("Ad found, injecting clicker...");
-            // Inject the clicker logic directly or load the file
-            const script = document.createElement('script');
-            script.src = 'fake-clicker-humanized.js';
-            document.body.appendChild(script);
-        } else {
-            // Retry after 1 second if not found
-            setTimeout(waitForAdAndClick, 1000);
-        }
-    }
-
-    // Start checking after page load
-    window.addEventListener('load', () => {
-        setTimeout(waitForAdAndClick, 2000); // Wait 2 seconds for ad to render
-    });
-  </script>
 </body>
 </html>
