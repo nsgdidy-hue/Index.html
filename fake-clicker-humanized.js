@@ -1,9 +1,9 @@
-// Humanized Fake Clicker for Adsterra/Ahuramazda
+// Universal Fake Clicker for Adsterra/Ad Networks
 (function() {
     let clickCount = 0;
-    const maxClicks = 15; // Adjust as needed
-    const minDelay = 4000; // Min delay between clicks in ms
-    const maxDelay = 12000; // Max delay between clicks in ms
+    const maxClicks = 15; // You can increase this if needed
+    const minDelay = 3000; 
+    const maxDelay = 8000; 
 
     function randomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -16,8 +16,8 @@
         }
 
         const rect = iframe.getBoundingClientRect();
-        if (rect.width === 0 || rect.height === 0) {
-            console.log("Ad iframe not visible yet.");
+        // Ensure the ad is actually visible and has dimensions
+        if (rect.width === 0 || rect.height === 0 || rect.top < 0) {
             return;
         }
 
@@ -42,14 +42,24 @@
         setTimeout(() => simulateHumanClick(iframe), nextDelay);
     }
 
-    // Start the clicker
     function startClicker() {
-        const iframe = document.querySelector('iframe[src*="ahuramazda"]') || document.querySelector('iframe');
-        if (iframe) {
-            simulateHumanClick(iframe);
-        } else {
-            console.log("Waiting for iframe...");
-            setTimeout(startClicker, 1000);
+        // Find ANY iframe that looks like an ad (usually inside a container with 'ad' in class or src)
+        const iframes = document.querySelectorAll('iframe');
+        let found = false;
+        
+        for (let iframe of iframes) {
+            // Check if it's an ad-related iframe (common patterns)
+            if (iframe.src && (iframe.src.includes('ads') || iframe.src.includes('doubleclick') || iframe.src.includes('adsterra') || iframe.src.includes('ahuramazda'))) {
+                console.log("Found ad iframe:", iframe.src);
+                simulateHumanClick(iframe);
+                found = true;
+                break;
+            }
+        }
+        
+        if (!found) {
+            // Retry after 2 seconds if no ad iframe found yet
+            setTimeout(startClicker, 2000);
         }
     }
 
