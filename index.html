@@ -1,126 +1,480 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Quiz</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .ad-container { margin: 20px 0; text-align: center; min-height: 100px; background: #f0f0f0; padding: 10px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10172a">
+<meta name="monetag" content="1dec5b4c2793316c3343a8d9550c75f1">
+<title>Your Quiz — Ultra Pro Max</title>
+
+<style>
+:root{
+--bg:#0b1020;--panel:#131c32;--panel2:#1a2742;
+--text:#f4f7ff;--muted:#a9b5ce;--accent:#8b7cff;
+--accent2:#35d6b0;--danger:#ff6b83;--line:#293754;
+--shadow:0 18px 50px #0005
+}
+*{box-sizing:border-box}
+body{
+margin:0;background:radial-gradient(circle at 15% 0%,#27345b 0,transparent 34%),var(--bg);
+color:var(--text);font:16px/1.5 system-ui,sans-serif;min-height:100vh
+}
+button,input,select{font:inherit}
+button{
+cursor:pointer;border:0;border-radius:13px;padding:11px 16px;
+font-weight:700;color:white;background:linear-gradient(135deg,var(--accent),#6254df)
+}
+button:hover{filter:brightness(1.1)}
+.secondary{background:var(--panel2);border:1px solid var(--line)}
+.ghost{background:transparent;border:1px solid var(--line)}
+header{position:sticky;top:0;z-index:5;background:#0b1020ee;border-bottom:1px solid var(--line)}
+.nav{max-width:1120px;margin:auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-weight:900;letter-spacing:1px}
+.brand small{display:block;color:var(--muted);font-size:11px}
+.navright{display:flex;gap:8px}
+.nav select,.controls select{
+background:var(--panel);color:var(--text);border:1px solid var(--line);
+border-radius:10px;padding:9px
+}
+main{max-width:1120px;margin:28px auto;padding:0 20px 60px}
+.hero{
+padding:36px;border:1px solid #ffffff18;border-radius:28px;
+background:linear-gradient(120deg,#1c2850ee,#182b3bee);
+box-shadow:var(--shadow)
+}
+.eyebrow{color:var(--accent2);font-weight:800;letter-spacing:2px;font-size:12px}
+.hero h1{font-size:clamp(34px,6vw,58px);line-height:1.05;margin:10px 0}
+.hero p{color:var(--muted);max-width:590px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
+.stat,.card,.quizbox{background:var(--panel);border:1px solid var(--line);border-radius:19px;padding:18px}
+.stat strong{display:block;font-size:25px}
+.stat span,.muted{color:var(--muted);font-size:13px}
+.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:28px 0 14px}
+.sectionhead h2{margin:0;font-size:22px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.category{
+min-height:115px;text-align:left;background:var(--panel);
+border:1px solid var(--line);padding:18px
+}
+.category .emoji{font-size:27px;display:block;margin-bottom:8px}
+.category small{display:block;color:var(--muted)}
+.controls{display:flex;gap:9px;flex-wrap:wrap}
+.hidden{display:none!important}
+.quizbox{max-width:760px;margin:20px auto;padding:24px}
+.quiztop{display:flex;justify-content:space-between;color:var(--muted);font-size:13px}
+.bar{height:8px;background:#263451;border-radius:9px;margin:14px 0 22px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0}
+.question{font-size:clamp(20px,3vw,27px);font-weight:800;margin:20px 0}
+.answers{display:grid;gap:10px}
+.answer{background:#182541;border:1px solid #344565;text-align:left;padding:14px}
+.answer.correct{border-color:var(--accent2);background:#123c3a}
+.answer.wrong{border-color:var(--danger);background:#492437}
+.quizfoot{display:flex;justify-content:space-between;gap:10px;margin-top:22px}
+.result{text-align:center;padding:20px}
+.score{font-size:54px;font-weight:900;color:var(--accent2)}
+.notice{background:#382f1b;border:1px solid #74602b;color:#f8dda0;border-radius:12px;padding:12px;font-size:13px;margin-top:14px}
+footer{text-align:center;color:var(--muted);padding:24px;border-top:1px solid var(--line)}
+.adbox{margin:20px auto;text-align:center;overflow:hidden}
+.smartlink{
+display:inline-block;padding:12px 20px;background:#8b7cff;color:white;
+border-radius:12px;text-decoration:none;font-weight:bold
+}
+.light{
+--bg:#f2f5fc;--panel:#fff;--panel2:#edf1fa;
+--text:#17213a;--muted:#5d6982;--line:#dce3f0;
+background:radial-gradient(circle at 15% 0%,#dce4ff 0,transparent 34%),var(--bg)
+}
+.light header{background:#f5f7fbe8}
+.light .hero{background:linear-gradient(120deg,#e3e8ff,#dff8f2);color:#17213a}
+.light .hero p{color:#5d6982}
+.light .controls select{background:#fff;color:#17213a}
+@media(max-width:760px){
+.grid{grid-template-columns:repeat(2,1fr)}
+.hero{padding:25px}
+.nav{padding:11px 14px}
+}
+@media(max-width:480px){
+main{padding:0 13px 40px}
+.grid{gap:9px}
+.category{padding:13px;min-height:105px}
+.stats{gap:7px}
+.stat{padding:12px}
+.stat strong{font-size:20px}
+.quizbox{padding:16px}
+}
+</style>
 </head>
+
 <body>
+<header>
+<div class="nav">
+<div class="brand">✦ YOUR QUIZ<small>LEARN • PLAY • WIN</small></div>
+<div class="navright">
+<select id="language">
+<option value="en">English</option>
+<option value="ml">മലയാളം</option>
+</select>
+<button class="ghost" id="themeBtn">☼</button>
+</div>
+</div>
+</header>
 
-    <h1>Welcome to the Quiz</h1>
-    
-    <!-- YOUR AD SCRIPTS HERE -->
-    <div class="ad-container">
-        <!-- Script 1 -->
-        <script data-cfasync="false" src="https://ahuramazda.org/1/904b6eac9d05701c5df5ce2a95513dda"></script>
-        
-        <!-- Script 2 & Container -->
-        <script async="async" data-cfasync="false" src="https://brijmohan.org/21/16d7c87f54c9e674195687a620277744"></script>
-        <div id="container-16d7c87f54c9e674195687a620277744"></div>
+<main>
+<section id="home">
 
-        <!-- Script 3 -->
-        <script data-cfasync="false" src="https://brijmohan.org/14/12f2445d6772e37ea9650fc5b126490e"></script>
-    </div>
+<!-- Adsterra 160x300 -->
+<div class="adbox" style="width:160px;min-height:300px">
+<script>
+atOptions={
+'key':'3d386205b99548047471ca407f646be9',
+'format':'iframe','height':300,'width':160,'params':{}
+};
+</script>
+<script src="https://brijmohan.org/22/3d386205b99548047471ca407f646be9"></script>
+</div>
 
-    <!-- ULTRA PROMAX FAKE CLICKER SCRIPT -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            console.log("[Bot] Starting Adsterra Clicker...");
+<div class="hero">
+<div class="eyebrow">THE WORLD IS YOUR CLASSROOM</div>
+<h1>Challenge your<br><span style="color:var(--accent2)">knowledge.</span></h1>
+<p>Play quick quizzes, discover new topics and beat your best score.</p>
+<div class="actions">
+<button id="surpriseBtn">🎲 Surprise me</button>
+<button class="secondary" id="dailyBtn">🔥 Daily challenge</button>
+<button class="ghost" id="showAdminBtn">＋ Add questions</button>
+<a class="smartlink" href="https://asiaso.org/4/4c12d1b852c522d09410dda57a205067" target="_blank" rel="nofollow sponsored noopener">Visit Link ↗</a>
+</div>
+<div class="notice">Questions and scores are saved only in this browser.</div>
+</div>
 
-            // Function to click inside an iframe or div
-            function fakeClick(element) {
-                if (!element) return;
+<!-- Adsterra 320x50 -->
+<div class="adbox" style="width:320px;max-width:100%;min-height:50px">
+<script>
+atOptions={
+'key':'d74cc65ca13bb4f713983a20d0c011f5',
+'format':'iframe','height':50,'width':320,'params':{}
+};
+</script>
+<script src="https://brijmohan.org/22/d74cc65ca13bb4f713983a20d0c011f5"></script>
+</div>
 
-                try {
-                    const rect = element.getBoundingClientRect();
-                    const x = Math.floor(Math.random() * rect.width);
-                    const y = Math.floor(Math.random() * rect.height);
+<!-- Adsterra 300x250 -->
+<div class="adbox" style="width:300px;max-width:100%;min-height:250px">
+<script>
+atOptions={
+'key':'73cd2fbb2da1efc49228d8ca722055da',
+'format':'iframe','height':250,'width':300,'params':{}
+};
+</script>
+<script src="https://brijmohan.org/22/73cd2fbb2da1efc49228d8ca722055da"></script>
+</div>
 
-                    const event = new MouseEvent('click', {
-                        view: window,
-                        bubbles: true,
-                        cancelable: true,
-                        clientX: rect.left + x,
-                        clientY: rect.top + y
-                    });
-                    
-                    element.dispatchEvent(event);
-                    console.log(`[Bot] Clicked at (${x}, ${y}) on ${element.tagName || 'unknown'}`);
-                } catch (e) {
-                    // Cross-origin iframe might block click if not careful, but dispatching usually works for ads
-                    console.warn("[Bot] Click failed for element:", e);
-                }
-            }
+<div class="stats">
+<div class="stat"><strong id="statQuestions">0</strong><span>Available questions</span></div>
+<div class="stat"><strong id="statPlayed">0</strong><span>Quizzes played</span></div>
+<div class="stat"><strong id="statBest">0%</strong><span>Best accuracy</span></div>
+</div>
 
-            // Helper to find iframes within a container
-            function clickInContainer(container) {
-                const iframes = container.querySelectorAll('iframe');
-                iframes.forEach(iframe => {
-                    // Try to click the iframe itself or its contentDocument
-                    fakeClick(iframe);
-                    // Sometimes the ad is in the shadow DOM or nested
-                    if (iframe.contentDocument) {
-                        const links = iframe.contentDocument.querySelectorAll('a, img, div');
-                        if (links.length > 0) {
-                            const randomLink = links[Math.floor(Math.random() * links.length)];
-                            fakeClick(randomLink);
-                        }
-                    }
-                });
-                
-                // Also click the container itself if it's clickable (some native ads)
-                if (container.tagName === 'DIV' && container.querySelector('a')) {
-                     const link = container.querySelector('a');
-                     if(link) fakeClick(link);
-                }
-            }
+<div class="sectionhead"><h2>Explore categories</h2></div>
+<div class="grid" id="categories"></div>
 
-            // Observe the DOM for new elements (ads load asynchronously)
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    mutation.addedNodes.forEach((node) => {
-                        if (node.nodeType === 1) { // Element node
-                            // Check if it's a specific container or contains an iframe
-                            if (node.id === 'container-16d7c87f54c9e674195687a620277744') {
-                                setTimeout(() => clickInContainer(node), 1000); // Wait for script to render
-                            }
-                            // General fallback: if any iframe appears in the ad container
-                            if (node.classList && node.classList.contains('ad-container')) {
-                                const iframes = node.querySelectorAll('iframe');
-                                iframes.forEach(fakeClick);
-                            }
-                        }
-                    });
-                });
-            });
+<div class="sectionhead"><h2>Quick quiz setup</h2></div>
+<div class="card">
+<div class="controls">
+<select id="count">
+<option value="5">5 questions</option>
+<option value="10" selected>10 questions</option>
+<option value="20">20 questions</option>
+<option value="all">All questions</option>
+</select>
+<select id="difficulty">
+<option value="all">All levels</option>
+<option value="Easy">Easy</option>
+<option value="Medium">Medium</option>
+<option value="Hard">Hard</option>
+</select>
+<select id="mode">
+<option value="practice">Practice mode</option>
+<option value="timed">Timed mode</option>
+</select>
+<button id="startAll">Start Quiz →</button>
+</div>
+</div>
 
-            // Start observing the body for changes
-            observer.observe(document.body, { childList: true, subtree: true });
+<div class="sectionhead"><h2>Local leaderboard</h2></div>
+<div class="card" id="leaderboard"></div>
+</section>
 
-            // Initial check after a delay to ensure scripts have run
-            setTimeout(() => {
-                const containers = document.querySelectorAll('.ad-container');
-                containers.forEach(clickInContainer);
-                
-                // Also target specific known containers
-                const knownContainer = document.getElementById('container-16d7c87f54c9e674195687a620277744');
-                if (knownContainer) clickInContainer(knownContainer);
+<section id="quiz" class="hidden">
+<div class="quizbox">
+<div class="quiztop"><span id="qCounter"></span><span id="timer"></span></div>
+<div class="bar"><i id="progress"></i></div>
+<div class="muted" id="qCategory"></div>
+<div class="question" id="qText"></div>
+<div class="answers" id="answers"></div>
+<div class="muted" id="feedback"></div>
+<div class="quizfoot">
+<button class="ghost" id="quitBtn">Exit</button>
+<button id="nextBtn" disabled>Next →</button>
+</div>
+</div>
+</section>
 
-            }, 2000);
+<section id="results" class="hidden">
+<div class="quizbox result">
+<div class="eyebrow">QUIZ COMPLETED</div>
+<h2 id="resultTitle">Great effort!</h2>
+<div class="score" id="resultScore">0/0</div>
+<p id="resultDetail" class="muted"></p>
+<div class="actions" style="justify-content:center">
+<button id="retryBtn">Play again</button>
+<button class="secondary" id="homeBtn">Back home</button>
+<button class="ghost" id="shareBtn">Share result</button>
+</div>
+<div class="sectionhead"><h2>Answer review</h2></div>
+<div id="review" style="text-align:left"></div>
+</div>
+</section>
 
-            // Loop: Keep checking every 5 seconds for new ads or reloads
-            setInterval(() => {
-                const containers = document.querySelectorAll('.ad-container');
-                containers.forEach(clickInContainer);
-                const knownContainer = document.getElementById('container-16d7c87f54c9e674195687a620277744');
-                if (knownContainer) clickInContainer(knownContainer);
-            }, 5000);
-        });
-    </script>
+<section id="admin" class="hidden">
+<div class="card">
+<div class="sectionhead"><h2>Add a question</h2><button class="ghost" id="closeAdmin">Close</button></div>
+<p class="muted">Questions are saved on this device.</p>
+<input id="newCategory" placeholder="Category">
+<input id="newQuestion" placeholder="Question">
+<input id="newAnswer" placeholder="Correct answer">
+<input id="opt2" placeholder="Wrong option 2">
+<input id="opt3" placeholder="Wrong option 3">
+<input id="opt4" placeholder="Wrong option 4">
+<button id="saveQuestion">Save question</button>
+<p id="adminMsg"></p>
+</div>
+</section>
+</main>
+
+<footer>YOUR QUIZ · Learn • Play • Win</footer>
+
+<script>
+const categories=[
+['🌍','General Knowledge'],['🔬','Science'],['➗','Mathematics'],
+['🏛️','History'],['🗺️','Geography'],['💻','Computer'],
+['⚽','Sports'],['📚','Literature'],['🧠','Logical Reasoning']
+];
+
+const seed=[
+{c:'General Knowledge',d:'Easy',q:'What is the capital of Japan?',o:['Tokyo','Kyoto','Osaka','Nagoya'],a:0,e:'Tokyo is the capital of Japan.'},
+{c:'General Knowledge',d:'Easy',q:'How many days are there in a leap year?',o:['365','366','364','360'],a:1,e:'A leap year has 366 days.'},
+{c:'Science',d:'Easy',q:'Which planet is known as the Red Planet?',o:['Venus','Jupiter','Mars','Mercury'],a:2,e:'Mars is known as the Red Planet.'},
+{c:'Science',d:'Easy',q:'What gas do plants absorb?',o:['Oxygen','Carbon dioxide','Nitrogen','Hydrogen'],a:1,e:'Plants absorb carbon dioxide.'},
+{c:'Mathematics',d:'Easy',q:'What is 12 × 8?',o:['88','92','96','108'],a:2,e:'12 × 8 = 96.'},
+{c:'Mathematics',d:'Medium',q:'What is the square root of 169?',o:['11','12','13','14'],a:2,e:'13 × 13 = 169.'},
+{c:'History',d:'Easy',q:'In which year did India become independent?',o:['1945','1947','1950','1952'],a:1,e:'India became independent in 1947.'},
+{c:'Geography',d:'Easy',q:'Which is the largest ocean?',o:['Atlantic','Indian','Arctic','Pacific'],a:3,e:'The Pacific is the largest ocean.'},
+{c:'Computer',d:'Easy',q:'What does CPU stand for?',o:['Central Processing Unit','Computer Personal Unit','Core Program Utility','Central Power User'],a:0,e:'CPU means Central Processing Unit.'},
+{c:'Sports',d:'Easy',q:'How many players are in a football team on the field?',o:['9','10','11','12'],a:2,e:'A team has 11 players.'},
+{c:'Science',d:'Medium',q:'What is the chemical symbol for gold?',o:['Ag','Au','Gd','Go'],a:1,e:'Au is the symbol for gold.'},
+{c:'Geography',d:'Medium',q:'Which country has the largest land area?',o:['Canada','China','United States','Russia'],a:3,e:'Russia is the largest country.'},
+{c:'Literature',d:'Easy',q:'Who wrote Romeo and Juliet?',o:['Charles Dickens','William Shakespeare','Jane Austen','Mark Twain'],a:1,e:'William Shakespeare wrote it.'},
+{c:'Logical Reasoning',d:'Easy',q:'What comes next: 2, 4, 8, 16?',o:['18','24','30','32'],a:3,e:'Each number is doubled.'},
+{c:'Science',d:'Hard',q:'Which part of a cell contains most genetic material?',o:['Ribosome','Nucleus','Cell membrane','Cytoplasm'],a:1,e:'The nucleus contains most DNA.'},
+{c:'Mathematics',d:'Medium',q:'What is 15% of 200?',o:['15','20','30','35'],a:2,e:'15% of 200 is 30.'},
+{c:'General Knowledge',d:'Medium',q:'Which instrument measures atmospheric pressure?',o:['Thermometer','Barometer','Hygrometer','Anemometer'],a:1,e:'A barometer measures pressure.'},
+{c:'History',d:'Medium',q:'Where did the ancient Olympic Games originate?',o:['Italy','Egypt','Greece','Turkey'],a:2,e:'They originated in Greece.'},
+{c:'Computer',d:'Medium',q:'Which language structures web pages?',o:['HTML','SQL','Python','C++'],a:0,e:'HTML structures web pages.'},
+{c:'Sports',d:'Medium',q:'In tennis, what is a score of zero called?',o:['Nil','Love','Duck','Blank'],a:1,e:'Zero is called love.'}
+];
+
+const mlQ={
+'What is the capital of Japan?':'ജപ്പാന്റെ തലസ്ഥാനം ഏതാണ്?',
+'How many days are there in a leap year?':'അധിവർഷത്തിൽ എത്ര ദിവസങ്ങളുണ്ട്?',
+'Which planet is known as the Red Planet?':'ചുവന്ന ഗ്രഹം എന്നറിയപ്പെടുന്നത് ഏത്?',
+'What gas do plants absorb?':'സസ്യങ്ങൾ ആഗിരണം ചെയ്യുന്ന വാതകം ഏത്?',
+'What is 12 × 8?':'12 × 8 എത്രയാണ്?',
+'What is the square root of 169?':'169-ന്റെ വർഗമൂലം എത്ര?',
+'In which year did India become independent?':'ഇന്ത്യയ്ക്ക് സ്വാതന്ത്ര്യം ലഭിച്ച വർഷം ഏത്?',
+'Which is the largest ocean?':'ഏറ്റവും വലിയ സമുദ്രം ഏത്?',
+'What does CPU stand for?':'CPU-യുടെ പൂർണ്ണരൂപം എന്ത്?'
+};
+
+let questions=JSON.parse(localStorage.getItem('yq_questions')||'null')||seed;
+let history=JSON.parse(localStorage.getItem('yq_history')||'[]');
+let lang=localStorage.getItem('yq_lang')||'en';
+let current=[],idx=0,chosen=null,score=0,seconds=15,tick=null;
+let lastConfig={category:'all',count:10,difficulty:'all',mode:'practice'};
+const $=id=>document.getElementById(id);
+
+function save(){
+localStorage.setItem('yq_questions',JSON.stringify(questions));
+localStorage.setItem('yq_history',JSON.stringify(history));
+}
+function shuffle(a){
+a=[...a];
+for(let i=a.length-1;i>0;i--){
+let j=Math.floor(Math.random()*(i+1));
+[a[i],a[j]]=[a[j],a[i]];
+}
+return a;
+}
+function show(id){
+['home','quiz','results','admin'].forEach(x=>$(x).classList.toggle('hidden',x!==id));
+window.scrollTo({top:0,behavior:'smooth'});
+}
+function escapeHtml(s){
+return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function renderHome(){
+$('statQuestions').textContent=questions.length;
+$('statPlayed').textContent=history.length;
+$('statBest').textContent=(history.length?Math.max(...history.map(x=>x.pct)):0)+'%';
+
+$('categories').innerHTML=categories.map(([em,c])=>
+`<button class="category" data-cat="${c}">
+<span class="emoji">${em}</span><b>${c}</b>
+<small>${questions.filter(q=>q.c===c).length} questions</small>
+</button>`).join('');
+
+document.querySelectorAll('[data-cat]').forEach(b=>
+b.onclick=()=>start({category:b.dataset.cat}));
+
+$('leaderboard').innerHTML=history.length?
+history.slice().sort((a,b)=>b.pct-a.pct).slice(0,5).map((x,i)=>
+`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line)">
+<span>${['🥇','🥈','🥉','4.','5.'][i]} ${escapeHtml(x.date)}</span>
+<b>${x.score}/${x.total} · ${x.pct}%</b></div>`).join(''):
+'<span class="muted">No attempts yet. Play a quiz!</span>';
+}
+function start(cfg={}){
+lastConfig={
+category:cfg.category||'all',
+count:cfg.count||$('count').value,
+difficulty:cfg.difficulty||$('difficulty').value,
+mode:cfg.mode||$('mode').value
+};
+let pool=questions.filter(q=>
+(lastConfig.category==='all'||q.c===lastConfig.category)&&
+(lastConfig.difficulty==='all'||q.d===lastConfig.difficulty));
+
+current=shuffle(pool).slice(0,lastConfig.count==='all'?pool.length:Number(lastConfig.count));
+if(!current.length){alert('No questions available.');return}
+idx=0;score=0;show('quiz');renderQuestion();
+}
+function renderQuestion(){
+chosen=null;
+let q=current[idx];
+$('qCounter').textContent=`Question ${idx+1} of ${current.length}`;
+$('qCategory').textContent=q.c+' · '+q.d;
+$('qText').textContent=(lang==='ml'&&mlQ[q.q])?mlQ[q.q]:q.q;
+$('progress').style.width=(idx/current.length*100)+'%';
+$('feedback').textContent='';
+$('nextBtn').disabled=true;
+$('nextBtn').textContent=idx===current.length-1?'See results':'Next question →';
+
+$('answers').innerHTML=q.o.map((o,i)=>
+`<button class="answer" data-answer="${i}">${String.fromCharCode(65+i)}. ${escapeHtml(o)}</button>`).join('');
+
+document.querySelectorAll('[data-answer]').forEach(b=>
+b.onclick=()=>selectAnswer(Number(b.dataset.answer)));
+
+clearInterval(tick);
+if(lastConfig.mode==='timed'){
+seconds=15;$('timer').textContent='⏱ '+seconds+'s';
+tick=setInterval(()=>{
+seconds--;$('timer').textContent='⏱ '+seconds+'s';
+if(seconds<=0){clearInterval(tick);if(chosen===null)selectAnswer(-1)}
+},1000);
+}else $('timer').textContent='Practice mode';
+}
+function selectAnswer(n){
+if(chosen!==null)return;
+chosen=n;clearInterval(tick);
+let q=current[idx];
+let buttons=[...document.querySelectorAll('[data-answer]')];
+buttons.forEach((b,i)=>{
+b.disabled=true;
+if(i===q.a)b.classList.add('correct');
+else if(i===n)b.classList.add('wrong');
+});
+if(n===q.a)score++;
+$('feedback').textContent=(n===q.a?'✓ Correct. ':'✕ Not quite. ')+(q.e||'Correct answer: '+q.o[q.a]);
+$('nextBtn').disabled=false;
+}
+function finish(){
+clearInterval(tick);
+let pct=Math.round(score/current.length*100);
+let date=new Date().toLocaleString();
+history.push({score,total:current.length,pct,date});
+save();
+$('resultScore').textContent=score+'/'+current.length;
+$('resultTitle').textContent=pct>=80?'Excellent work!':pct>=50?'Good effort!':'Keep practising!';
+$('resultDetail').textContent=`Accuracy: ${pct}% · ${score} correct out of ${current.length}.`;
+$('review').innerHTML=current.map((q,i)=>
+`<div style="padding:12px 0;border-bottom:1px solid var(--line)">
+<b>${i+1}. ${escapeHtml(q.q)}</b>
+<div class="muted">Correct answer: ${escapeHtml(q.o[q.a])}</div>
+</div>`).join('');
+show('results');renderHome();
+}
+
+$('nextBtn').onclick=()=>{
+if(chosen===null)return;
+if(idx<current.length-1){idx++;renderQuestion();}
+else finish();
+};
+$('quitBtn').onclick=()=>{
+if(confirm('Exit this quiz?')){
+clearInterval(tick);show('home');
+}
+};
+$('startAll').onclick=()=>start();
+$('surpriseBtn').onclick=()=>start({category:'all',count:'10',difficulty:'all',mode:'practice'});
+$('dailyBtn').onclick=()=>start({category:'all',count:'5',difficulty:'all',mode:'timed'});
+$('retryBtn').onclick=()=>start(lastConfig);
+$('homeBtn').onclick=()=>show('home');
+$('shareBtn').onclick=async()=>{
+let t=`I scored ${score}/${current.length} on Your Quiz!`;
+try{
+if(navigator.share)await navigator.share({title:'Your Quiz result',text:t});
+else{await navigator.clipboard.writeText(t);alert('Result copied!');}
+}catch(e){}
+};
+$('showAdminBtn').onclick=()=>show('admin');
+$('closeAdmin').onclick=()=>show('home');
+
+$('saveQuestion').onclick=()=>{
+let c=$('newCategory').value.trim();
+let q=$('newQuestion').value.trim();
+let opts=[$('newAnswer').value.trim(),$('opt2').value.trim(),$('opt3').value.trim(),$('opt4').value.trim()];
+if(!c||!q||opts.some(x=>!x)){
+$('adminMsg').textContent='Please fill all fields.';return;
+}
+let a=opts.shift();
+questions.push({c,d:'Medium',q,o:[a,...opts],a:0,e:''});
+save();
+$('adminMsg').textContent='Question saved on this device.';
+renderHome();
+};
+
+$('themeBtn').onclick=()=>{
+document.body.classList.toggle('light');
+localStorage.setItem('yq_light',document.body.classList.contains('light'));
+};
+if(localStorage.getItem('yq_light')==='true')document.body.classList.add('light');
+
+$('language').value=lang;
+$('language').onchange=e=>{
+lang=e.target.value;
+localStorage.setItem('yq_lang',lang);
+document.documentElement.lang=lang;
+};
+renderHome();
+</script>
+
+<!-- Additional Adsterra script -->
+<script data-cfasync="false" src="https://brijmohan.org/14/12f2445d6772e37ea9650fc5b126490e"></script>
+
+<!-- Popunder: include only once -->
+<script data-cfasync="false" src="https://ahuramazda.org/1/904b6eac9d05701c5df5ce2a95513dda"></script>
 
 </body>
 </html>
