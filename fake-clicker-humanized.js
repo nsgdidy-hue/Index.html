@@ -1,67 +1,58 @@
-// fake-clicker-humanized.js
-// Targets ~1000 clicks/hour but with random delays to mimic human behavior
-
+// Humanized Fake Clicker for Adsterra/Ahuramazda
 (function() {
-    const TARGET_CLICKS_PER_HOUR = 1000;
-    const AVG_INTERVAL_MS = (60 * 60 * 1000) / TARGET_CLICKS_PER_HOUR; // 3.6 seconds average
-    
-    function getRandomClickPosition(element) {
-        const rect = element.getBoundingClientRect();
-        // Ensure we click within the visible area of the iframe
-        const x = Math.floor(Math.random() * rect.width);
-        const y = Math.floor(Math.random() * rect.height);
-        return { x, y };
+    let clickCount = 0;
+    const maxClicks = 15; // Adjust as needed
+    const minDelay = 4000; // Min delay between clicks in ms
+    const maxDelay = 12000; // Max delay between clicks in ms
+
+    function randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    function simulateClick(element) {
-        const pos = getRandomClickPosition(element);
-        
-        const event = new MouseEvent('click', {
+    function simulateHumanClick(iframe) {
+        if (clickCount >= maxClicks) {
+            console.log("Max clicks reached.");
+            return;
+        }
+
+        const rect = iframe.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) {
+            console.log("Ad iframe not visible yet.");
+            return;
+        }
+
+        // Random position within the ad banner
+        const x = randomInt(0, rect.width);
+        const y = randomInt(0, rect.height);
+
+        const clickEvent = new MouseEvent('click', {
             view: window,
             bubbles: true,
             cancelable: true,
-            clientX: pos.x,
-            clientY: pos.y
+            clientX: rect.left + x,
+            clientY: rect.top + y
         });
         
-        element.dispatchEvent(event);
-        console.log(`Human-like click at (${pos.x}, ${pos.y})`);
+        iframe.dispatchEvent(clickEvent);
+        clickCount++;
+        console.log(`Click sent at (${x}, ${y}) - Total: ${clickCount}`);
+        
+        // Schedule next click with human-like delay
+        const nextDelay = randomInt(minDelay, maxDelay);
+        setTimeout(() => simulateHumanClick(iframe), nextDelay);
     }
 
-    function startAutoClicker() {
-        let adIframe = document.querySelector('iframe[src*="ahuramazda"]');
-        if (!adIframe) {
-            adIframe = document.querySelector('iframe'); 
-        }
-
-        if (adIframe) {
-            console.log("Starting Human-like Auto Clicker...");
-            
-            function scheduleNextClick() {
-                // Add randomness: Interval between 2 seconds and 5 seconds
-                // This averages out to ~3.5 seconds, close to 1000/hr
-                const randomDelay = Math.floor(Math.random() * 3000) + 2000; 
-                
-                setTimeout(() => {
-                    try {
-                        simulateClick(adIframe);
-                    } catch (e) {
-                        adIframe.click();
-                    }
-                    scheduleNextClick(); // Schedule next click after this one finishes
-                }, randomDelay);
-            }
-            
-            scheduleNextClick();
+    // Start the clicker
+    function startClicker() {
+        const iframe = document.querySelector('iframe[src*="ahuramazda"]') || document.querySelector('iframe');
+        if (iframe) {
+            simulateHumanClick(iframe);
         } else {
-            console.log("Waiting for ad iframe...");
-            setTimeout(startAutoClicker, 5000);
+            console.log("Waiting for iframe...");
+            setTimeout(startClicker, 1000);
         }
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', startAutoClicker);
-    } else {
-        startAutoClicker();
-    }
+    // Initialize
+    startClicker();
 })();
